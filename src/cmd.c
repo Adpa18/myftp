@@ -5,7 +5,7 @@
 ** Login	wery_a
 **
 ** Started on	Tue Apr 19 21:34:01 2016 Adrien WERY
-** Last update	Wed Apr 20 23:10:13 2016 Adrien WERY
+** Last update	Sat Apr 30 18:23:49 2016 Adrien WERY
 */
 
 #include <unistd.h>
@@ -13,8 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <errno.h>
 #include "common.h"
 #include "array.h"
 
@@ -25,7 +24,7 @@ char    *pwd()
     if ((path = getcwd(NULL, 0)) == NULL)
     {
         perror("getcwd");
-        return (NULL);
+        return (strdup(strerror(errno)));
     }
     return (concat(path, "\n", NULL));
 }
@@ -35,9 +34,20 @@ char    *cd(char *path)
     if (chdir(path) == -1)
     {
         perror("chdir");
-        return (NULL);
+        return (strdup(strerror(errno)));
     }
     return (concat(path, "\n", NULL));
+}
+
+char    *end_ls(DIR *dir, char *dest)
+{
+    char    *tmp;
+
+    closedir(dir);
+    tmp = dest;
+    dest = concat(tmp, "\n", NULL);
+    free(tmp);
+    return (dest);
 }
 
 char    *ls(char *path)
@@ -52,7 +62,7 @@ char    *ls(char *path)
     if (!(dir = opendir(path)))
     {
         perror("opendir");
-        return (NULL);
+        return (strdup(strerror(errno)));
     }
     dest = NULL;
     while ((curr_file = readdir(dir)))
@@ -65,21 +75,24 @@ char    *ls(char *path)
                 free(tmp);
         }
     }
-    closedir(dir);
-    tmp = dest;
-    dest = concat(tmp, "\n", NULL);
-    free(tmp);
-    return (dest);
+    return (end_ls(dir, dest));
 }
 
-char    *exec(char **cmds)
+char    *exec(char *cmd_line)
 {
-    // print_array(cmds);
+    char    **cmds;
+    char    *ret;
+
+    if (!cmd_line || !(cmds = split(cmd_line, " ")))
+        return (NULL);
     if (!strcmp(cmds[0], "ls"))
-        return (ls(cmds[1]));
+        ret = ls(cmds[1]);
     else if (!strcmp(cmds[0], "pwd"))
-        return (pwd());
+        ret = pwd();
     else if (!strcmp(cmds[0], "cd"))
-        return (cd(cmds[1]));
-    return ("Unknow Command");
+        ret = cd(cmds[1]);
+    else
+        ret = NULL;
+    free(cmds);
+    return (ret);
 }

@@ -5,18 +5,25 @@
 ** Login	wery_a
 **
 ** Started on	Tue Apr 19 21:45:38 2016 Adrien WERY
-** Last update	Wed Apr 20 22:03:02 2016 Adrien WERY
+** Last update	Sat Apr 30 18:17:21 2016 Adrien WERY
 */
 
 #ifndef COMMON_H
 # define COMMON_H
 
-# define BUFF_SIZE  4
+# include <string.h>
+# include <stdio.h>
+
+# define BUFF_SIZE  1024
 
 typedef enum { false, true } bool;
+typedef int SOCKET;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr SOCKADDR;
+typedef struct in_addr IN_ADDR;
 
 char    *concat(const char *s1, const char *s2, const char *lim);
 char    *getLine(int fd);
-char    *exec(char **cmds);
+char    *exec(char *cmd_line);
 
 #endif /* !COMMON_H */

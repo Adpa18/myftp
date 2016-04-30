@@ -19,6 +19,7 @@ SRC_DIR_SERVER	=	$(SRC_DIR)server/
 SRC				=	$(SRC_DIR)cmd.c		\
 					$(SRC_DIR)array.c	\
 					$(SRC_DIR)common.c	\
+					$(SRC_DIR)socket.c	\
 
 SRC_CLIENT		=	$(SRC_DIR_CLIENT)client.c
 

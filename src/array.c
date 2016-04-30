@@ -64,10 +64,9 @@ inline char     **split(char *s, char *delim)
     if ((array = malloc(sizeof(char *) * (nb_elems + 1))) == NULL)
         return (NULL);
     str = strtok(s, delim);
-    i = -1;
-    while (str)
+    for (i = 0; str; ++i)
     {
-        array[++i] = strdup(str);
+        array[i] = strdup(str);
         str = strtok(NULL, delim);
     }
     array[++i] = NULL;
