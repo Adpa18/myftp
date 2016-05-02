@@ -11,12 +11,30 @@
 #ifndef CMD_H
 # define CMD_H
 
-# include "common.h"
+# include "cmdlist.h"
 
-# define UNKNOWN_CMD    "Unknow Command\n"
+typedef enum COMMAND
+{
+    ABOR, CWD, DELE, LIST, MDTM, MKD, NLST, PASS, PASV,
+    PORT, PWD, QUIT, RETR, RMD, RNFR, RNTO, SITE, SIZE,
+    STOR, TYPE, USER, NOOP
+} COMMAND;
 
-char    *pwd();
-bool    cd(char *path);
-char    *ls(char *path);
+static const char *cmdlist_str[] =
+        {
+                "ABOR", "CWD", "DELE", "LIST", "MDTM", "MKD", "NLST", "PASS", "PASV",
+                "PORT", "PWD", "QUIT", "RETR", "RMD", "RNFR", "RNTO", "SITE", "SIZE",
+                "STOR", "TYPE", "USER", "NOOP"
+        };
+
+typedef char *(*cmdlist_ptr)(const char *, Client *);
+
+static cmdlist_ptr cmdlist_func[] =
+        {
+                &ftp_noop, &ftp_noop, &ftp_noop, &ftp_noop, &ftp_noop, &ftp_noop,
+                &ftp_noop, &ftp_pass, &ftp_noop, &ftp_noop, &ftp_noop, &ftp_noop,
+                &ftp_noop, &ftp_noop, &ftp_noop, &ftp_noop, &ftp_noop, &ftp_noop,
+                &ftp_noop, &ftp_noop, &ftp_user, &ftp_noop
+        };
 
 #endif /* !CMD_H */

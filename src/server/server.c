@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <sys/stat.h>
 #include "server.h"
 
 bool    killed = false;
@@ -35,9 +36,10 @@ SOCKET      init_connection(unsigned int port)
         perror("socket");
         return (-1);
     }
-    s_in.sin_addr.s_addr = htonl(INADDR_ANY);
-    s_in.sin_port = htons(port);
     s_in.sin_family = AF_INET;
+    s_in.sin_port = htons(port);
+    s_in.sin_addr.s_addr = htonl(INADDR_ANY);
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, NULL, 0);
     if (bind(sock, (SOCKADDR *)&s_in, sizeof(s_in)) == -1)
     {
         perror("bind");
@@ -70,7 +72,7 @@ bool    init_select(fd_set *rdfs, int sock, Manager *manager)
     return (true);
 }
 
-void    server(unsigned int port)
+void    server(unsigned int port, const char *path)
 {
     SOCKET  sock;
     Manager manager;
@@ -80,6 +82,7 @@ void    server(unsigned int port)
         return;
     manager.size = 0;
     manager.max_fd = sock;
+    manager.cwd = path;
     while (!killed)
     {
         if (!init_select(&rdfs, sock, &manager))
@@ -87,7 +90,7 @@ void    server(unsigned int port)
         if (FD_ISSET(STDIN_FILENO, &rdfs))
             break;
         else if (FD_ISSET(sock, &rdfs))
-            new_client(sock, &rdfs, &manager);
+            new_client(sock, &rdfs, &manager, path);
         else
             listen_clients(&rdfs, &manager);
     }
@@ -98,14 +101,20 @@ void    server(unsigned int port)
 
 int     main(int ac, char **av)
 {
+    struct stat     stat_dir;
     unsigned int    port;
 
-    if (ac < 2 || (port = atoi(av[1])) == 0)
+    if (ac < 3 || (port = atoi(av[1])) == 0)
     {
         write(1, USAGE, strlen(USAGE));
         return (1);
     }
+    if (lstat(av[2], &stat_dir) == -1)
+    {
+        perror("path");
+        return (1);
+    }
     signal(SIGINT, &kill_sig);
-    server(port);
+    server(port, av[2]);
     return (0);
 }

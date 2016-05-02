@@ -26,12 +26,15 @@ SRC_CLIENT		=	$(SRC_DIR_CLIENT)client.c       \
 
 SRC_SERVER		=	$(SRC_DIR_SERVER)server.c           \
                     $(SRC_DIR_SERVER)manage_client.c    \
+                    $(SRC_DIR_SERVER)ftp_cmd.c          \
 
 SRC_CLIENT		+=	$(SRC)
 
 SRC_SERVER		+=	$(SRC)
 
-CFLAGS			= -I./inc -W -Wall -Wextra -Werror
+CFLAGS			=   -I./inc -W -Wall -Wextra -Werror
+
+LD_FLAGS        =   -lcrypt
 
 OBJ_CLIENT		= $(SRC_CLIENT:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
@@ -43,7 +46,7 @@ $(OBJ_DIR)%.o	:	$(SRC_DIR)%.c
 	@echo -e "Compiling $< to $@"
 	@$(CC) -c $(CFLAGS) $< -o $@
 
-$(NAME)	: 	$(CLIENT) $(SERVER)
+$(NAME)	: 	$(SERVER) ##$(CLIENT)
 
 all 	:	$(NAME)
 
@@ -54,7 +57,7 @@ $(CLIENT)	:	$(OBJ_CLIENT)
 
 $(SERVER)	:	$(OBJ_SERVER)
 	@echo -e "\033[32mLinking $@\033[00m"
-	@$(CC) $(OBJ_SERVER) -o $(SERVER)
+	@$(CC) $(OBJ_SERVER) -o $(SERVER) $(LD_FLAGS)
 	@echo -e "\033[33m${SERVER} Compiled\033[00m"
 
 clean	:

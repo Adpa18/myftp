@@ -13,25 +13,20 @@
 
 # include "socket.h"
 
-# define USAGE          "Usage : ./server port\n"
+# define USAGE          "Usage : ./server port path\n"
 # define MAX_CLIENTS    42
-# define CRLF	        "\r\n"
 # define EOT_CLIENT     "Client %d is disconnected !\n"
 # define KILL_SIGINT    "Server was kiled by SIGINT\n"
-
-typedef struct
-{
-    SOCKET  sock;
-}           Client;
 
 typedef struct
 {
     Client  clients[MAX_CLIENTS];
     int     size;
     int     max_fd;
+    const char  *cwd;
 }           Manager;
 
 void    listen_clients(fd_set *rdfs, Manager *manager);
-void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager);
+void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager, const char *path);
 
 #endif /* !SERVER_H */

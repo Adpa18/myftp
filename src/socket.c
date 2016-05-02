@@ -36,7 +36,10 @@ void	cat(int in, int out)
 //    while (read_socket(in, buffer) > 0)
 //        write_socket(out, buffer);
     while ((len =  read(in, buffer, BUFF_SIZE)) > 0)
+    {
+        printf("len = %d\n", len);
         write(out, buffer, len);
+    }
 //    cat error still read on sock
 }
 
