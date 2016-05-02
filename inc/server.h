@@ -17,6 +17,7 @@
 # define MAX_CLIENTS    42
 # define CRLF	        "\r\n"
 # define EOT_CLIENT     "Client %d is disconnected !\n"
+# define KILL_SIGINT    "Server was kiled by SIGINT\n"
 
 typedef struct
 {
@@ -29,5 +30,8 @@ typedef struct
     int     size;
     int     max_fd;
 }           Manager;
+
+void    listen_clients(fd_set *rdfs, Manager *manager);
+void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager);
 
 #endif /* !SERVER_H */

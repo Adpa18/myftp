@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "array.h"
 
-inline int     array_len(char **array)
+inline int     array_len(const char **array)
 {
     int i;
 
@@ -32,7 +32,7 @@ inline void     free_array(char **array)
     free(array);
 }
 
-inline void     print_array(char **array)
+inline void     print_array(const char **array)
 {
     int i;
 
@@ -44,7 +44,7 @@ inline void     print_array(char **array)
     }
 }
 
-inline char     **split(char *s, char *delim)
+inline char     **split(const char *s, const char *delim)
 {
     char    **array;
     char    *copy;
@@ -61,14 +61,16 @@ inline char     **split(char *s, char *delim)
         str = strtok(NULL, delim);
     }
     free(copy);
+    copy = strdup(s);
     if ((array = malloc(sizeof(char *) * (nb_elems + 1))) == NULL)
         return (NULL);
-    str = strtok(s, delim);
+    str = strtok(copy, delim);
     for (i = 0; str; ++i)
     {
         array[i] = strdup(str);
         str = strtok(NULL, delim);
     }
-    array[++i] = NULL;
+    free(copy);
+    array[i] = NULL;
     return (array);
 }

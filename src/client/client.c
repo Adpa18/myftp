@@ -12,18 +12,19 @@
 #include <string.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
+#include <signal.h>
 #include "cmd.h"
 #include "client.h"
 
-bool        local_cmd(char *cmd)
-{
-    char    *ret;
+bool    killed = false;
 
-    if (cmd[0] != 'l' || (ret = exec(&cmd[1])) == NULL)
-        return (false);
-    write(1, ret, strlen(ret));
-    free(ret);
-    return (true);
+void        kill_sig(int sig)
+{
+    if (sig == SIGINT)
+    {
+        write(1, KILL_SIGINT, strlen(KILL_SIGINT));
+        killed = true;
+    }
 }
 
 SOCKET      init_connection(const char *ip_address, unsigned int port)
@@ -48,10 +49,8 @@ SOCKET      init_connection(const char *ip_address, unsigned int port)
     return (sock);
 }
 
-bool    init_select(fd_set *rdfs, int sock, int first)
+bool    init_select(fd_set *rdfs, int sock)
 {
-    if (first == 0)
-        write(1, SHELL_PS1, strlen(SHELL_PS1));
     FD_ZERO(rdfs);
     FD_SET(STDIN_FILENO, rdfs);
     FD_SET(sock, rdfs);
@@ -64,22 +63,7 @@ bool    init_select(fd_set *rdfs, int sock, int first)
     return (true);
 }
 
-void    shell(int sock)
-{
-    char    *cmd;
-
-    cmd = getLine(0);
-    if (!strcmp(cmd, "quit"))
-    {
-        close(sock);
-        exit(0);
-    }
-    if (!local_cmd(cmd))
-        write_socket(sock, cmd);
-    free(cmd);
-}
-
-bool    client(char *host, unsigned int port)
+void    client(char *host, unsigned int port)
 {
     SOCKET  sock;
     fd_set  rdfs;
@@ -87,11 +71,13 @@ bool    client(char *host, unsigned int port)
 
     buffer[0] = 0;
     if ((sock = init_connection(host, port)) == -1)
-        return (false);
-    while (42)
+        return;
+    while (!killed)
     {
-        if (!init_select(&rdfs, sock, buffer[0]))
-            return (false);
+//        fix PS1
+        write(1, SHELL_PS1, strlen(SHELL_PS1));
+        if (!init_select(&rdfs, sock))
+            break;
         if (FD_ISSET(STDIN_FILENO, &rdfs))
             shell(sock);
         else if (FD_ISSET(sock, &rdfs))
@@ -102,10 +88,9 @@ bool    client(char *host, unsigned int port)
                 break;
             }
             write(1, buffer, strlen(buffer));
-            buffer[0] = 0;
         }
     }
-    return (true);
+    close(sock);
 }
 
 int     main(int ac, char **av)
@@ -117,6 +102,7 @@ int     main(int ac, char **av)
         write(1, USAGE, strlen(USAGE));
         return (1);
     }
+    signal(SIGINT, &kill_sig);
     client(av[1], port);
     return (0);
 }

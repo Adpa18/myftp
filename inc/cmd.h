@@ -13,7 +13,7 @@
 
 # include "common.h"
 
-# define UNKNOWN_CMD    "Unknow Command"
+# define UNKNOWN_CMD    "Unknow Command\n"
 
 char    *pwd();
 bool    cd(char *path);

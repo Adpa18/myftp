@@ -13,9 +13,11 @@
 
 # include "socket.h"
 
-# define USAGE      "Usage : ./client host port\n"
-# define SHELL_PS1  "ftp> "
-# define EOT_SERVER "Server disconnected !\n"
+# define USAGE          "Usage : ./client host port\n"
+# define SHELL_PS1      "ftp> "
+# define EOT_SERVER     "Server disconnected !\n"
+# define KILL_SIGINT    "Client was kiled by SIGINT\n"
 
+void    shell(int sock);
 
 #endif /* !CLIENT_H */

@@ -11,9 +11,19 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#include <server.h>
+#include <signal.h>
 #include "server.h"
-#include "cmd.h"
+
+bool    killed = false;
+
+void        kill_sig(int sig)
+{
+    if (sig == SIGINT)
+    {
+        write(1, KILL_SIGINT, strlen(KILL_SIGINT));
+        killed = true;
+    }
+}
 
 SOCKET      init_connection(unsigned int port)
 {
@@ -43,33 +53,6 @@ SOCKET      init_connection(unsigned int port)
     return (sock);
 }
 
-bool    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
-{
-    SOCKADDR_IN csin;
-    socklen_t   sinsize;
-    int         csock;
-
-    sinsize = sizeof(csin);
-    if ((csock = accept(sock, (SOCKADDR *)&csin, &sinsize)) == -1)
-    {
-        perror("accept");
-        return (false);
-    }
-    FD_SET(csock, rdfs);
-    manager->max_fd = csock > manager->max_fd ? csock : manager->max_fd;
-    manager->clients[manager->size].sock = csock;
-    ++manager->size;
-    return (true);
-}
-
-void    remove_client(Manager *manager, int to_remove)
-{
-    close(manager->clients[to_remove].sock);
-    memmove(manager->clients + to_remove, manager->clients + to_remove + 1,
-            (manager->size - to_remove - 1) * sizeof(Client));
-    --manager->size;
-}
-
 bool    init_select(fd_set *rdfs, int sock, Manager *manager)
 {
     FD_ZERO(rdfs);
@@ -87,58 +70,20 @@ bool    init_select(fd_set *rdfs, int sock, Manager *manager)
     return (true);
 }
 
-void    listen_clients(fd_set *rdfs, Manager *manager)
-{
-    char    buffer[BUFF_SIZE];
-    char    *ret;
-
-    for (int i = 0; i < manager->size; i++)
-    {
-        if (!FD_ISSET(manager->clients[i].sock, rdfs))
-            continue;
-        if (read_socket(manager->clients[i].sock, buffer) == 0)
-        {
-            remove_client(manager, i);
-            printf(EOT_CLIENT, i);
-        }
-        else if ((ret = exec(buffer)))
-        {
-            write_socket(manager->clients[i].sock, ret);
-            free(ret);
-        }
-        else
-             write_socket(manager->clients[i].sock, UNKNOWN_CMD);
-//        break;
-    }
-}
-
-bool    server_end(Manager *manager, int sock)
-{
-    for (int i = 0; i < manager->size; i++)
-    {
-        close(manager->clients[i].sock);
-    }
-    close(sock);
-    return (true);
-}
-
-bool    server(unsigned int port)
+void    server(unsigned int port)
 {
     SOCKET  sock;
     Manager manager;
     fd_set  rdfs;
 
     if ((sock = init_connection(port)) == -1)
-        return (false);
+        return;
     manager.size = 0;
     manager.max_fd = sock;
-    while (42)
+    while (!killed)
     {
         if (!init_select(&rdfs, sock, &manager))
-        {
-            close(sock);
-            return (false);
-        }
+            break;
         if (FD_ISSET(STDIN_FILENO, &rdfs))
             break;
         else if (FD_ISSET(sock, &rdfs))
@@ -146,7 +91,9 @@ bool    server(unsigned int port)
         else
             listen_clients(&rdfs, &manager);
     }
-    return (server_end(&manager, sock));
+    for (int i = 0; i < manager.size; i++)
+        close(manager.clients[i].sock);
+    close(sock);
 }
 
 int     main(int ac, char **av)
@@ -158,7 +105,7 @@ int     main(int ac, char **av)
         write(1, USAGE, strlen(USAGE));
         return (1);
     }
-    if (!server(port))
-        return (1);
+    signal(SIGINT, &kill_sig);
+    server(port);
     return (0);
 }

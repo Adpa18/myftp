@@ -1,4 +1,4 @@
-CC		=	gcc
+CC		=	gcc -g
 
 RM		=	rm -rf
 
@@ -21,9 +21,11 @@ SRC				=	$(SRC_DIR)cmd.c		\
 					$(SRC_DIR)common.c	\
 					$(SRC_DIR)socket.c	\
 
-SRC_CLIENT		=	$(SRC_DIR_CLIENT)client.c
+SRC_CLIENT		=	$(SRC_DIR_CLIENT)client.c       \
+                    $(SRC_DIR_CLIENT)cmd_manage.c   \
 
-SRC_SERVER		=	$(SRC_DIR_SERVER)server.c
+SRC_SERVER		=	$(SRC_DIR_SERVER)server.c           \
+                    $(SRC_DIR_SERVER)manage_client.c    \
 
 SRC_CLIENT		+=	$(SRC)
 

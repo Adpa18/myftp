@@ -93,6 +93,6 @@ char    *exec(char *cmd_line)
         ret = cd(cmds[1]);
     else
         ret = NULL;
-    free(cmds);
+    free_array(cmds);
     return (ret);
 }
