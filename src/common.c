@@ -42,7 +42,7 @@ inline char    *getLine(int fd)
     return (dest);
 }
 
-inline char *concat(const char *s1, const char *s2, const char *lim)
+inline char *concat(const char *s1, const char *s2, const char *s3)
 {
     size_t  len1;
     size_t  len2;
@@ -51,14 +51,27 @@ inline char *concat(const char *s1, const char *s2, const char *lim)
 
     len1 = (s1) ? strlen(s1) : 0;
     len2 = (s2) ? strlen(s2) : 0;
-    len3 = (lim) ? strlen(lim) : 0;
+    len3 = (s3) ? strlen(s3) : 0;
     if ((dest = malloc(len1 + len2 + len3 + 1)) == NULL)
         return (NULL);
     if (s1)
         memcpy(dest, s1, len1);
-    if (lim)
-        memcpy(dest + len1, lim, len3);
     if (s2)
-        memcpy(dest + len1 + len3, s2, len2 + 1);
+        memcpy(dest + len1, s2, len2);
+    if (s3)
+        memcpy(dest + len1 + len2, s3, len3 + 1);
     return (dest);
+}
+
+inline char *replace(char *s, char c, char by)
+{
+    int     i;
+
+    i = -1;
+    while (s[++i])
+    {
+        if (s[i] == c)
+        s[i] = by;
+    }
+    return (s);
 }

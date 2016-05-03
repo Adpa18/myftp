@@ -29,15 +29,26 @@ typedef enum STATE
     LOGGED_IN
 } STATE;
 
+typedef enum MODE_DATA
+{
+    DATA_NO,
+    DATA_PASV,
+    DATA_PORT
+} MODE_DATA;
+
 typedef struct
 {
-    SOCKET  sock;
-    char    *path;
-    STATE   status;
-    char    username[255];
-}           Client;
+    SOCKET      sock;
+    SOCKET      sock_pasv;
+    char        *root;
+    STATE       status;
+    SOCKADDR_IN *addr;
+    MODE_DATA   mode;
+    char        username[255];
+}               Client;
 
 char    *concat(const char *s1, const char *s2, const char *lim);
+char    *replace(char *s, char c, char by);
 char    *getLine(int fd);
 char    *exec(char *cmd_line);
 

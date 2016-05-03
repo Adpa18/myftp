@@ -26,7 +26,8 @@ typedef struct
     const char  *cwd;
 }           Manager;
 
+SOCKET  init_connection(unsigned int port);
 void    listen_clients(fd_set *rdfs, Manager *manager);
-void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager, const char *path);
+void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager);
 
 #endif /* !SERVER_H */

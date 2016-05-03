@@ -12,7 +12,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <sys/stat.h>
 #include "server.h"
 
 bool    killed = false;
@@ -72,7 +71,7 @@ bool    init_select(fd_set *rdfs, int sock, Manager *manager)
     return (true);
 }
 
-void    server(unsigned int port, const char *path)
+void    server(unsigned int port)
 {
     SOCKET  sock;
     Manager manager;
@@ -82,7 +81,7 @@ void    server(unsigned int port, const char *path)
         return;
     manager.size = 0;
     manager.max_fd = sock;
-    manager.cwd = path;
+    manager.cwd = getcwd(NULL, 0);
     while (!killed)
     {
         if (!init_select(&rdfs, sock, &manager))
@@ -90,7 +89,7 @@ void    server(unsigned int port, const char *path)
         if (FD_ISSET(STDIN_FILENO, &rdfs))
             break;
         else if (FD_ISSET(sock, &rdfs))
-            new_client(sock, &rdfs, &manager, path);
+            new_client(sock, &rdfs, &manager);
         else
             listen_clients(&rdfs, &manager);
     }
@@ -101,7 +100,6 @@ void    server(unsigned int port, const char *path)
 
 int     main(int ac, char **av)
 {
-    struct stat     stat_dir;
     unsigned int    port;
 
     if (ac < 3 || (port = atoi(av[1])) == 0)
@@ -109,12 +107,12 @@ int     main(int ac, char **av)
         write(1, USAGE, strlen(USAGE));
         return (1);
     }
-    if (lstat(av[2], &stat_dir) == -1)
+    if (chdir(av[2]) == -1)
     {
         perror("path");
         return (1);
     }
     signal(SIGINT, &kill_sig);
-    server(port, av[2]);
+    server(port);
     return (0);
 }
