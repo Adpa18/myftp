@@ -41,7 +41,7 @@ typedef struct
 {
     SOCKET      server_sock;
     SOCKET      sock;
-    SOCKET      sock_pasv;
+    SOCKET      sock_data;
     char        *root;
     STATE       status;
     int         addr;
@@ -50,6 +50,7 @@ typedef struct
     char        username[255];
 }               Client;
 
+char    *run_pasv(int sock_data, cmd_func func, const char *cmd);
 char    *concat(const char *s1, const char *s2, const char *lim);
 char    *replace(char *s, char c, char by);
 char    *getLine(int fd);

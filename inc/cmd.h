@@ -37,8 +37,8 @@ static cmdlist_ptr cmdlist_func[] =
     &ftp_cwd, &ftp_dele, &ftp_help, &ftp_list, &ftp_mkd,
     &ftp_no_cmd, &ftp_no_cmd, &ftp_noop, &ftp_pass, &ftp_pasv,
     &ftp_no_cmd, &ftp_pwd, &ftp_quit, &ftp_no_cmd, &ftp_no_cmd,
-    &ftp_no_cmd, &ftp_rmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd,
-    &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd,
+    &ftp_retr, &ftp_rmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd,
+    &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_stor, &ftp_no_cmd,
     &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_user
 };
 

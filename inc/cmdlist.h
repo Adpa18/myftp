@@ -15,6 +15,8 @@
 # define BYE_BYE        "221 Bye Bye from my house"CRLF
 # define LIST_PENDING   "150 Here comes the directory listing"CRLF
 # define LIST_OK        "226 Directory send OK"CRLF
+# define DATA_PENDING   "150 Opening BINARY mode data connection for "
+# define DATA_OK        "226 Transfer complete"CRLF
 # define CWD_OK         "250 Directory successfully changed"CRLF
 # define USERNAME_OK    "331 User name okay, need password for "
 # define PASV_PORT      "425 Use PORT or PASV first"CRLF
@@ -45,5 +47,7 @@ char    *ftp_dele(const char *cmd_line, Client *client);
 char    *ftp_mkd(const char *cmd_line, Client *client);
 char    *ftp_rmd(const char *cmd_line, Client *client);
 char    *ftp_list(const char *cmd_line, Client *client);
+char    *ftp_stor(const char *cmd_line, Client *client);
+char    *ftp_retr(const char *cmd_line, Client *client);
 
 #endif //PSU_2015_MYFTP_CMDLIST_H

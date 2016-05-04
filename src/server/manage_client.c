@@ -30,7 +30,7 @@ void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
     manager->clients[manager->size].addr = (int)csin.sin_addr.s_addr;
     manager->clients[manager->size].mode = DATA_NO;
     manager->clients[manager->size].use_mode = DATA_NO;
-    manager->clients[manager->size].sock_pasv = -1;
+    manager->clients[manager->size].sock_data = -1;
     ++manager->size;
     write_socket(csock, WELCOME);
 }

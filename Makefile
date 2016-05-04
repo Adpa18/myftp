@@ -31,6 +31,7 @@ SRC_SERVER		=	$(SRC_DIR_SERVER)server.c           \
                     $(SRC_DIR_SERVER)ftp_cmd_user.c     \
                     $(SRC_DIR_SERVER)ftp_cmd_mode.c     \
                     $(SRC_DIR_SERVER)ftp_cmd_file.c     \
+                    $(SRC_DIR_SERVER)ftp_cmd_data.c     \
 
 SRC_CLIENT		+=	$(SRC)
 

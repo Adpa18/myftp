@@ -33,41 +33,34 @@ void	cat(int in, int out)
     char    buffer[BUFF_SIZE];
     int     len;
 
-//    while (read_socket(in, buffer) > 0)
-//        write_socket(out, buffer);
-    while ((len =  read(in, buffer, BUFF_SIZE)) > 0)
-    {
-        printf("len = %d\n", len);
+    while ((len = read(in, buffer, BUFF_SIZE)) > 0)
         write(out, buffer, len);
-    }
-//    cat error still read on sock
+    if (len == -1)
+        perror("read");
 }
 
-bool    send_file(const char *filename, int sock)
+void    send_file(int sock, const char *filename)
 {
     int	fd;
 
     if ((fd = open(filename, O_RDONLY)) == -1)
     {
         perror(filename);
-        return (false);
+        return;
     }
     cat(fd, sock);
     close(fd);
-    return (true);
 }
 
-int     recv_file(const char *filename, int sock)
+void    recv_file(int sock, const char *filename)
 {
     int	fd;
 
-    printf("%s\n", filename);
     if ((fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
     {
         perror(filename);
-        return (false);
+        return;
     }
     cat(sock, fd);
     close(fd);
-    return (true);
 }

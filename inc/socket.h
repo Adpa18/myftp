@@ -13,7 +13,7 @@
 bool    write_socket(SOCKET sock, const char *buffer);
 int     read_socket(SOCKET sock, char *buffer);
 void	cat(int in, int out);
-bool    send_file(const char *filename, int sock);
-int     recv_file(const char *filename, int sock);
+void    send_file(int sock, const char *filename);
+void    recv_file(int sock, const char *filename);
 
 #endif //PSU_2015_MYFTP_SOCKET_H
