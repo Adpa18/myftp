@@ -1,6 +1,12 @@
-//
-// Created by wery_a on 26/04/16.
-//
+/*
+** socket.h for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:30:23 2016 Adrien WERY
+** Last update	Wed May 04 14:30:26 2016 Adrien WERY
+*/
 
 #ifndef PSU_2015_MYFTP_SOCKET_H
 # define PSU_2015_MYFTP_SOCKET_H

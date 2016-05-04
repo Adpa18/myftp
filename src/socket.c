@@ -1,10 +1,16 @@
-//
-// Created by wery_a on 26/04/16.
-//
+/*
+** socket.c for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:31:42 2016 Adrien WERY
+** Last update	Wed May 04 14:31:43 2016 Adrien WERY
+*/
 
-#include "socket.h"
 #include <unistd.h>
 #include <fcntl.h>
+#include "socket.h"
 
 bool    write_socket(SOCKET sock, const char *buffer)
 {
@@ -46,10 +52,12 @@ void    send_file(int sock, const char *filename)
     if ((fd = open(filename, O_RDONLY)) == -1)
     {
         perror(filename);
-        return;
     }
-    cat(fd, sock);
-    close(fd);
+    else
+    {
+        cat(fd, sock);
+        close(fd);
+    }
 }
 
 void    recv_file(int sock, const char *filename)
@@ -59,8 +67,10 @@ void    recv_file(int sock, const char *filename)
     if ((fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
     {
         perror(filename);
-        return;
     }
-    cat(sock, fd);
-    close(fd);
+    else
+    {
+        cat(sock, fd);
+        close(fd);
+    }
 }

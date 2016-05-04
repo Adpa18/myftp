@@ -1,6 +1,12 @@
-//
-// Created by wery_a on 04/05/16.
-//
+/*
+** ftp_cmd_data.c for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:30:55 2016 Adrien WERY
+** Last update	Wed May 04 14:30:57 2016 Adrien WERY
+*/
 
 #include <stdlib.h>
 #include "socket.h"

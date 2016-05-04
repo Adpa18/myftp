@@ -1,6 +1,12 @@
-//
-// Created by wery_a on 03/05/16.
-//
+/*
+** ftp_cmd_mode.c for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:31:04 2016 Adrien WERY
+** Last update	Wed May 04 14:31:05 2016 Adrien WERY
+*/
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -39,12 +45,12 @@ char    *run_pasv(int sock_data, cmd_func func, const char *cmd)
     int         csock;
     SOCKADDR_IN csin;
     socklen_t   sinsize;
-    struct timeval timeout;
+    struct timeval to;
 
     sinsize = sizeof(csin);
-    timeout.tv_sec = 30;
-    timeout.tv_usec = 0;
-    setsockopt (sock_data, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
+    to.tv_sec = 30;
+    to.tv_usec = 0;
+    setsockopt (sock_data, SOL_SOCKET, SO_RCVTIMEO, (char *)&to, sizeof(to));
     if ((csock = accept(sock_data, (SOCKADDR *)&csin, &sinsize)) == -1)
     {
         perror("accept");
@@ -53,17 +59,17 @@ char    *run_pasv(int sock_data, cmd_func func, const char *cmd)
     if ((pid = fork()) == -1)
     {
         perror("fork");
+        close(csock);
         return (strdup("500 Fork Failed"CRLF));
     }
     else if (pid == 0)
     {
+        close(sock_data);
         func(csock, cmd);
+        close(csock);
         exit(0);
     }
-    else
-    {
-        wait(NULL);
-        close(csock);
-        return (NULL);
-    }
+    wait(NULL);
+    close(csock);
+    return (NULL);
 }

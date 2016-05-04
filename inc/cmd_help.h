@@ -1,6 +1,12 @@
-//
-// Created by wery_a on 03/05/16.
-//
+/*
+** cmd_help.h for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:30:45 2016 Adrien WERY
+** Last update	Wed May 04 14:30:47 2016 Adrien WERY
+*/
 
 #ifndef PSU_2015_MYFTP_CMD_HELP_H
 #define PSU_2015_MYFTP_CMD_HELP_H

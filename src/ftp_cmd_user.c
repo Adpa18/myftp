@@ -1,11 +1,17 @@
-//
-// Created by wery_a on 03/05/16.
-//
+/*
+** ftp_cmd_user.c for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:31:08 2016 Adrien WERY
+** Last update	Wed May 04 14:31:09 2016 Adrien WERY
+*/
 
-#include "array.h"
-#include "cmdlist.h"
 #include <pwd.h>
 #include <crypt.h>
+#include "array.h"
+#include "cmdlist.h"
 
 char    *ftp_user(const char *cmd_line, Client *client)
 {
@@ -41,18 +47,12 @@ char    *ftp_pass(const char *cmd_line, Client *client)
         return (strdup(INVALID_PASS));
     if (strncmp(client->username, "Anonymous", 9) || array[1])
     {
-        if ((pw = getpwnam(client->username)) == NULL)
+        if ((pw = getpwnam(client->username)) == NULL
+            || (pw->pw_passwd != '\0' && (!array[1] ||
+                strcmp(crypt(array[1], pw->pw_passwd), pw->pw_passwd))))
         {
             free_array(array);
             return (strdup(LOGIN_FAILED));
-        }
-        if (pw->pw_passwd != '\0')
-        {
-            if (!array[1] || strcmp(crypt(array[1], pw->pw_passwd), pw->pw_passwd))
-            {
-                free_array(array);
-                return (strdup(LOGIN_FAILED));
-            }
         }
     }
     client->status = LOGGED_IN;

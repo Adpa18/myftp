@@ -1,6 +1,12 @@
-//
-// Created by wery_a on 02/05/16.
-//
+/*
+** cmdlist.h for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:30:35 2016 Adrien WERY
+** Last update	Wed May 04 14:30:37 2016 Adrien WERY
+*/
 
 #ifndef PSU_2015_MYFTP_CMDLIST_H
 # define PSU_2015_MYFTP_CMDLIST_H
@@ -22,7 +28,7 @@
 # define PASV_PORT      "425 Use PORT or PASV first"CRLF
 # define INVALID_USER   "530 Invalid username"CRLF
 # define INVALID_PASS   "530 Invalid password"CRLF
-# define CANT_USER      "530 530 Can't change"CRLF
+# define CANT_USER      "530 Can't change"CRLF
 # define LOGIN_ALREADY  "230 Already Logged in with "
 # define LOGIN_SUCCESS  "230 Login successful with "
 # define LOGIN_FAILED   "530 Login failed"CRLF

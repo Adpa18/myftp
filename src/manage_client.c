@@ -1,6 +1,12 @@
-//
-// Created by wery_a on 02/05/16.
-//
+/*
+** manage_client.c for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:31:23 2016 Adrien WERY
+** Last update	Wed May 04 14:31:25 2016 Adrien WERY
+*/
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -37,7 +43,6 @@ void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
 
 void    remove_client(Manager *manager, int to_remove)
 {
-    free(manager->clients[to_remove].root);
     close(manager->clients[to_remove].sock);
     memmove(manager->clients + to_remove, manager->clients + to_remove + 1,
             (manager->size - to_remove - 1) * sizeof(Client));
@@ -62,7 +67,8 @@ char    *response(const char *cmd_line, Client *client)
         return (NULL);
     if ((cmd = get_cmd(cmd_line))  == NO_CMD)
         return (strdup(UNKNOW_CMD));
-    if (client->status == LOGGED_IN || cmd == USER || cmd == PASS || cmd == QUIT)
+    if (client->status == LOGGED_IN || cmd == USER
+        || cmd == PASS || cmd == QUIT)
         return (cmdlist_func[cmd](cmd_line, client));
     else
         return (strdup(LOGIN_FIRST));

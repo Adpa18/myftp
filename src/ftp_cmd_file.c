@@ -1,6 +1,12 @@
-//
-// Created by wery_a on 03/05/16.
-//
+/*
+** ftp_cmd_file.c for PSU_2015_myftp
+**
+** Made by	Adrien WERY
+** Login	wery_a
+**
+** Started on	Wed May 04 14:31:00 2016 Adrien WERY
+** Last update	Wed May 04 14:31:02 2016 Adrien WERY
+*/
 
 #include <unistd.h>
 #include <sys/stat.h>
