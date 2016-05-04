@@ -15,35 +15,31 @@
 
 typedef enum COMMAND
 {
-    ABOR, ACCT, ALLO, APPE, CDUP, CWD, DELE, EPRT, EPSV, FEAT, HELP,
-    LIST, MDTM, MKD, MODE, NLST, NOOP, OPTS, PASS, PASV, PORT, PWD,
-    QUIT, REIN, REST, RETR, RMD, RNFR, RNTO, SITE, SIZE, SMNT, STAT,
-    STOR, STOU, STRU, SYST, TYPE, USER, XCUP, XCWD, XMKD, XPWD, XRMD,
-    NO_CMD
+    ABOR, ACCT, ALLO, APPE, CDUP, CWD, DELE, HELP, LIST, MKD,
+    MODE, NLST, NOOP, PASS, PASV, PORT, PWD, QUIT, REIN, REST,
+    RETR, RMD, RNFR, RNTO, SITE, SIZE, SMNT, STAT, STOR, STOU,
+    STRU, SYST, TYPE, USER, NO_CMD
 } COMMAND;
 
 static const char *cmdlist_str[] =
 {
-    "ABOR", "ACCT", "ALLO", "APPE", "CDUP", "CWD", "DELE", "EPRT", "EPSV", "FEAT",
-    "HELP", "LIST", "MDTM", "MKD", "MODE", "NLST", "NOOP", "OPTS",  "PASS", "PASV",
-    "PORT", "PWD", "QUIT", "REIN", "REST", "RETR", "RMD",  "RNFR", "RNTO", "SITE",
-    "SIZE", "SMNT", "STAT", "STOR", "STOU", "STRU",  "SYST", "TYPE", "USER", "XCUP",
-    "XCWD", "XMKD", "XPWD", "XRMD"
+    "ABOR", "ACCT", "ALLO", "APPE", "CDUP", "CWD", "DELE",  "HELP", "LIST", "MKD",
+    "MODE", "NLST", "NOOP", "PASS", "PASV", "PORT", "PWD", "QUIT", "REIN", "REST",
+    "RETR", "RMD",  "RNFR", "RNTO", "SITE", "SIZE", "SMNT", "STAT", "STOR", "STOU",
+    "STRU",  "SYST", "TYPE", "USER"
 };
 
-typedef char *(*cmdlist_ptr)(const char *, Client *);
+typedef char    *(*cmdlist_ptr)(const char *, Client *);
 
 static cmdlist_ptr cmdlist_func[] =
 {
     &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_cdup,
-    &ftp_cwd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd,
-    &ftp_help, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd,
-    &ftp_no_cmd, &ftp_noop, &ftp_no_cmd, &ftp_pass, &ftp_pasv,
+    &ftp_cwd, &ftp_dele, &ftp_help, &ftp_list, &ftp_mkd,
+    &ftp_no_cmd, &ftp_no_cmd, &ftp_noop, &ftp_pass, &ftp_pasv,
     &ftp_no_cmd, &ftp_pwd, &ftp_quit, &ftp_no_cmd, &ftp_no_cmd,
+    &ftp_no_cmd, &ftp_rmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd,
     &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd,
-    &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd,
-    &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_user, &ftp_no_cmd,
-    &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd
+    &ftp_no_cmd, &ftp_no_cmd, &ftp_no_cmd, &ftp_user
 };
 
 #endif /* !CMD_H */

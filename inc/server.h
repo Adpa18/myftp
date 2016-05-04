@@ -23,7 +23,7 @@ typedef struct
     Client  clients[MAX_CLIENTS];
     int     size;
     int     max_fd;
-    const char  *cwd;
+    char    *cwd;
 }           Manager;
 
 SOCKET  init_connection(unsigned int port);

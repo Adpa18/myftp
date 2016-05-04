@@ -23,17 +23,21 @@ void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
     }
     FD_SET(csock, rdfs);
     manager->max_fd = csock > manager->max_fd ? csock : manager->max_fd;
+    manager->clients[manager->size].server_sock = sock;
     manager->clients[manager->size].sock = csock;
     manager->clients[manager->size].status = NONE;
-    manager->clients[manager->size].root = strdup(getcwd(NULL, 0));
-    manager->clients[manager->size].addr = &csin;
+    manager->clients[manager->size].root = manager->cwd;
+    manager->clients[manager->size].addr = (int)csin.sin_addr.s_addr;
     manager->clients[manager->size].mode = DATA_NO;
+    manager->clients[manager->size].use_mode = DATA_NO;
+    manager->clients[manager->size].sock_pasv = -1;
     ++manager->size;
     write_socket(csock, WELCOME);
 }
 
 void    remove_client(Manager *manager, int to_remove)
 {
+    free(manager->clients[to_remove].root);
     close(manager->clients[to_remove].sock);
     memmove(manager->clients + to_remove, manager->clients + to_remove + 1,
             (manager->size - to_remove - 1) * sizeof(Client));
@@ -82,9 +86,13 @@ void    listen_clients(fd_set *rdfs, Manager *manager)
         {
             if ((ret = response(buffer, &(manager->clients[i]))))
             {
+                if (!strncmp(ret, "221", 3))
+                    remove_client(manager, i);
                 write_socket(manager->clients[i].sock, ret);
                 free(ret);
+                manager->clients[i].use_mode = DATA_NO;
             }
         }
+        break;
     }
 }

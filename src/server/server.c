@@ -12,6 +12,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <server.h>
+#include <common.h>
 #include "server.h"
 
 bool    killed = false;
@@ -27,8 +29,9 @@ void        kill_sig(int sig)
 
 SOCKET      init_connection(unsigned int port)
 {
-    SOCKET  sock;
+    SOCKET      sock;
     SOCKADDR_IN s_in;
+    int         enable;
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
@@ -38,7 +41,9 @@ SOCKET      init_connection(unsigned int port)
     s_in.sin_family = AF_INET;
     s_in.sin_port = htons(port);
     s_in.sin_addr.s_addr = htonl(INADDR_ANY);
-    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, NULL, 0);
+    enable = 1;
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1)
+        perror("setsockopt");
     if (bind(sock, (SOCKADDR *)&s_in, sizeof(s_in)) == -1)
     {
         perror("bind");
@@ -66,6 +71,7 @@ bool    init_select(fd_set *rdfs, int sock, Manager *manager)
     if (select(manager->max_fd + 1, rdfs, NULL, NULL, NULL) == -1)
     {
         perror("select");
+        close(sock);
         return (false);
     }
     return (true);
@@ -95,6 +101,7 @@ void    server(unsigned int port)
     }
     for (int i = 0; i < manager.size; i++)
         close(manager.clients[i].sock);
+    free(manager.cwd);
     close(sock);
 }
 

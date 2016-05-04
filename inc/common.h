@@ -21,6 +21,7 @@ typedef int SOCKET;
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
+typedef void    (*cmd_func)(int sock, const char *cmd);
 
 typedef enum STATE
 {
@@ -38,12 +39,14 @@ typedef enum MODE_DATA
 
 typedef struct
 {
+    SOCKET      server_sock;
     SOCKET      sock;
     SOCKET      sock_pasv;
     char        *root;
     STATE       status;
-    SOCKADDR_IN *addr;
+    int         addr;
     MODE_DATA   mode;
+    MODE_DATA   use_mode;
     char        username[255];
 }               Client;
 
