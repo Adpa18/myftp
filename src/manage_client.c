@@ -59,14 +59,25 @@ COMMAND get_cmd(const char *cmd_line)
     return (NO_CMD);
 }
 
-char    *response(const char *cmd_line, Client *client)
+char    *response(char *cmd_line, Client *client)
 {
     COMMAND cmd;
+    int     i;
 
     if (cmd_line == NULL || cmd_line[0] == 0 || cmd_line[0] == '\n')
         return (NULL);
+    i = -1;
+    while (cmd_line[++i])
+    {
+        if (cmd_line[i] == '\n' || cmd_line[i] == '\r')
+        {
+            cmd_line[i] = 0;
+            break;
+        }
+    }
     if ((cmd = get_cmd(cmd_line))  == NO_CMD)
         return (strdup(UNKNOW_CMD));
+    printf("Client %d ==> %s\n", client->sock, cmd_line);
     if (client->status == LOGGED_IN || cmd == USER
         || cmd == PASS || cmd == QUIT)
         return (cmdlist_func[cmd](cmd_line, client));

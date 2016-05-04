@@ -24,7 +24,6 @@ int     read_socket(SOCKET sock, char *buffer)
 {
     int     n;
 
-    n = 0;
     if ((n = read(sock, buffer, BUFF_SIZE - 1)) == -1)
     {
         perror("read");

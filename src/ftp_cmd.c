@@ -10,6 +10,7 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <common.h>
 #include "common.h"
 #include "array.h"
 #include "socket.h"
@@ -21,6 +22,13 @@ char    *ftp_no_cmd(const char *cmd_line, Client *client)
     (void)cmd_line;
     (void)client;
     return (strdup(NOT_IMP_CMD));
+}
+
+char    *ftp_type(const char *cmd_line, Client *client)
+{
+    (void)cmd_line;
+    (void)client;
+    return (strdup(TYPE_OK));
 }
 
 char    *ftp_noop(const char *cmd_line, Client *client)
@@ -58,17 +66,20 @@ char    *ftp_list(const char *cmd_line, Client *client)
     char        *cmd;
     char        *ret;
 
-    if (client->sock_data == -1 || client->mode != DATA_PASV)
+    if (client->sock_data == -1 || client->mode == DATA_NO)
         return (strdup(PASV_PORT));
     if (!(array = split(cmd_line, " ")))
         return (strdup(ERROR_CMD));
     cmd = concat("ls -ln ", array[1], "\0");
     write_socket(client->sock, LIST_PENDING);
-    ret = run_pasv(client->sock_data, &cmd_list, cmd);
+    if (client->mode == DATA_PASV)
+        ret = run_pasv(client, &cmd_list, cmd);
+    else
+        ret = run_port(client, &cmd_list, cmd);
     free(cmd);
     free_array(array);
-    client->use_mode = DATA_PASV;
-    client->mode = NO_DATA;
+    client->use_mode = client->mode;
+    client->mode = DATA_NO;
     if (ret)
         return (ret);
     return (strdup(LIST_OK));

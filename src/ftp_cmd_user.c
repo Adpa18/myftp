@@ -5,7 +5,7 @@
 ** Login	wery_a
 **
 ** Started on	Wed May 04 14:31:08 2016 Adrien WERY
-** Last update	Wed May 04 14:31:09 2016 Adrien WERY
+** Last update	Wed May 04 16:09:45 2016 Adrien WERY
 */
 
 #include <pwd.h>
@@ -28,7 +28,6 @@ char    *ftp_user(const char *cmd_line, Client *client)
         return (strdup(INVALID_USER));
     }
     client->status = USER_OK;
-    array[1] = replace(array[1], '\n', '\0');
     strcpy(client->username, array[1]);
     free_array(array);
     return (concat(USERNAME_OK, client->username, CRLF));
@@ -45,7 +44,7 @@ char    *ftp_pass(const char *cmd_line, Client *client)
         return (concat(LOGIN_ALREADY, client->username, CRLF));
     if ((array = split(cmd_line, " ")) == NULL)
         return (strdup(INVALID_PASS));
-    if (strncmp(client->username, "Anonymous", 9) || array[1])
+    if (strncasecmp(client->username, "Anonymous", 9) || array[1])
     {
         if ((pw = getpwnam(client->username)) == NULL
             || (pw->pw_passwd != '\0' && (!array[1] ||

@@ -61,7 +61,7 @@ char    *ftp_cwd(const char *cmd_line, Client *client)
     }
     last_path = getcwd(NULL, 0);
     //    if array[1] == "/" fix it
-    if (chdir(replace(array[1], '\n', 0)) == -1)
+    if (chdir(array[1]) == -1)
     {
         free_array(array);
         free(last_path);

@@ -48,9 +48,12 @@ typedef struct
     MODE_DATA   mode;
     MODE_DATA   use_mode;
     char        username[255];
+    char        ip_client[255];
+    int         port_client;
 }               Client;
 
-char    *run_pasv(int sock_data, cmd_func func, const char *cmd);
+char    *run_pasv(Client *client, cmd_func func, const char *cmd);
+char    *run_port(Client *client, cmd_func func, const char *cmd);
 char    *concat(const char *s1, const char *s2, const char *lim);
 char    *replace(char *s, char c, char by);
 char    *getLine(int fd);

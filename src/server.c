@@ -27,7 +27,7 @@ void        kill_sig(int sig)
     }
 }
 
-SOCKET      init_connection(unsigned int port)
+SOCKET      init_connection(in_addr_t ip, unsigned int port)
 {
     SOCKET      sock;
     SOCKADDR_IN s_in;
@@ -40,7 +40,7 @@ SOCKET      init_connection(unsigned int port)
     }
     s_in.sin_family = AF_INET;
     s_in.sin_port = htons(port);
-    s_in.sin_addr.s_addr = htonl(INADDR_ANY);
+    s_in.sin_addr.s_addr = ip;
     enable = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1)
         perror("setsockopt");
@@ -83,7 +83,7 @@ void    server(unsigned int port)
     Manager manager;
     fd_set  rdfs;
 
-    if ((sock = init_connection(port)) == -1)
+    if ((sock = init_connection(INADDR_ANY, port)) == -1)
         return;
     manager.size = 0;
     manager.max_fd = sock;
