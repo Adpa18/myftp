@@ -17,8 +17,6 @@ char    *ftp_user(const char *cmd_line, Client *client)
 {
     char    **array;
 
-//    if (client->status == USER_OK)
-//        return (strdup(USERNAME_OK));
     if (client->status == LOGGED_IN)
         return (strdup(CANT_USER));
     if ((array = split(cmd_line, " ")) == NULL || !array[1])
@@ -63,6 +61,5 @@ char    *ftp_quit(const char *cmd_line, Client *client)
 {
     (void)cmd_line;
     (void)client;
-//    make remove of client
     return (strdup(BYE_BYE));
 }

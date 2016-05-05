@@ -12,8 +12,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <server.h>
-#include <common.h>
 #include "server.h"
 
 bool    killed = false;
@@ -25,38 +23,6 @@ void        kill_sig(int sig)
         write(1, KILL_SIGINT, strlen(KILL_SIGINT));
         killed = true;
     }
-}
-
-SOCKET      init_connection(in_addr_t ip, unsigned int port)
-{
-    SOCKET      sock;
-    SOCKADDR_IN s_in;
-    int         enable;
-
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-    {
-        perror("socket");
-        return (-1);
-    }
-    s_in.sin_family = AF_INET;
-    s_in.sin_port = htons(port);
-    s_in.sin_addr.s_addr = ip;
-    enable = 1;
-    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1)
-        perror("setsockopt");
-    if (bind(sock, (SOCKADDR *)&s_in, sizeof(s_in)) == -1)
-    {
-        perror("bind");
-        close(sock);
-        return (-1);
-    }
-    if (listen(sock, MAX_CLIENTS) == -1)
-    {
-        perror("listen");
-        close(sock);
-        return (-1);
-    }
-    return (sock);
 }
 
 bool    init_select(fd_set *rdfs, int sock, Manager *manager)

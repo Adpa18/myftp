@@ -29,5 +29,6 @@ typedef struct
 SOCKET  init_connection(in_addr_t  ip, unsigned int port);
 void    listen_clients(fd_set *rdfs, Manager *manager);
 void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager);
+void    server(unsigned int port);
 
 #endif /* !SERVER_H */

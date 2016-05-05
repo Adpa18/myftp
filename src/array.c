@@ -26,10 +26,13 @@ inline void     free_array(char **array)
 {
     int i;
 
-    i = -1;
-    while (array[++i])
-        free(array[i]);
-    free(array);
+    if (array)
+    {
+        i = -1;
+        while (array[++i])
+            free(array[i]);
+        free(array);
+    }
 }
 
 inline void     print_array(const char **array)
@@ -44,15 +47,12 @@ inline void     print_array(const char **array)
     }
 }
 
-inline char     **split(const char *s, const char *delim)
+int             getNbElems(const char *s, const char *delim)
 {
-    char    **array;
+    int     nb_elems;
     char    *copy;
     char    *str;
-    int     nb_elems;
-    int     i;
 
-    nb_elems = 0;
     copy = strdup(s);
     str = strtok(copy, delim);
     while (str)
@@ -61,6 +61,18 @@ inline char     **split(const char *s, const char *delim)
         str = strtok(NULL, delim);
     }
     free(copy);
+    return (nb_elems);
+}
+
+inline char     **split(const char *s, const char *delim)
+{
+    char    **array;
+    char    *copy;
+    char    *str;
+    int     nb_elems;
+    int     i;
+
+    nb_elems = getNbElems(s, delim);
     copy = strdup(s);
     if ((array = malloc(sizeof(char *) * (nb_elems + 1))) == NULL)
         return (NULL);

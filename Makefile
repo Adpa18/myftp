@@ -12,6 +12,7 @@ SRC		=	$(SRC_DIR)cmd.c		         \
             $(SRC_DIR)array.c	         \
             $(SRC_DIR)common.c	         \
             $(SRC_DIR)socket.c	         \
+            $(SRC_DIR)init.c             \
             $(SRC_DIR)server.c           \
             $(SRC_DIR)manage_client.c    \
             $(SRC_DIR)ftp_cmd.c          \
