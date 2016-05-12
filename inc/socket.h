@@ -17,7 +17,7 @@
 # include "common.h"
 
 bool    write_socket(SOCKET sock, const char *buffer);
-int     read_socket(SOCKET sock, char *buffer);
+char    *read_socket(SOCKET sock);
 void	cat(int in, int out);
 void    send_file(int sock, const char *filename);
 void    recv_file(int sock, const char *filename);

@@ -9,8 +9,11 @@
 */
 
 #include <unistd.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include "socket.h"
+
+extern bool    killed;
 
 bool    write_socket(SOCKET sock, const char *buffer)
 {
@@ -20,17 +23,31 @@ bool    write_socket(SOCKET sock, const char *buffer)
     return (true);
 }
 
-int     read_socket(SOCKET sock, char *buffer)
+char    *read_socket(SOCKET sock)
 {
+    char    *str;
+    char    *tmp;
+    char    buffer[BUFF_SIZE];
     int     n;
 
-    if ((n = read(sock, buffer, BUFF_SIZE - 1)) == -1)
+    str = NULL;
+    while (!killed)
     {
-        perror("read");
-        n = 0;
+        if ((n = read(sock, buffer, BUFF_SIZE - 1)) == -1)
+        {
+            perror("read");
+            return (NULL);
+        }
+        if (n == 0)
+            return (NULL);
+        buffer[n] = 0;
+        tmp = str;
+        str = concat(str, buffer, 0);
+        free(tmp);
+        if (buffer[n - 1] == '\n' && buffer[n - 2] == '\r')
+            break;
     }
-    buffer[n] = 0;
-    return (n);
+    return (str);
 }
 
 void	cat(int in, int out)

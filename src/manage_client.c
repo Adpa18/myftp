@@ -91,14 +91,14 @@ char    *response(char *cmd_line, Client *client)
 
 void    listen_clients(fd_set *rdfs, Manager *manager)
 {
-    char    buffer[BUFF_SIZE];
+    char    *buffer;
     char    *ret;
 
     for (int i = 0; i < manager->size; i++)
     {
         if (!FD_ISSET(manager->clients[i].sock, rdfs))
             continue;
-        if (read_socket(manager->clients[i].sock, buffer) == 0)
+        if ((buffer = read_socket(manager->clients[i].sock)) == NULL)
         {
             remove_client(manager, i);
             printf(EOT_CLIENT, i);
@@ -113,6 +113,7 @@ void    listen_clients(fd_set *rdfs, Manager *manager)
                 free(ret);
             }
         }
+        free(buffer);
         break;
     }
 }
