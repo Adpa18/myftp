@@ -8,12 +8,8 @@
 ** Last update	Wed May 04 14:31:20 2016 Adrien WERY
 */
 
-#include <unistd.h>
 #include <stdlib.h>
-#include <common.h>
 #include "common.h"
-#include "array.h"
-#include "socket.h"
 #include "cmdlist.h"
 #include "cmd_help.h"
 

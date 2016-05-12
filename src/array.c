@@ -53,6 +53,7 @@ int             getNbElems(const char *s, const char *delim)
     char    *copy;
     char    *str;
 
+    nb_elems = 0;
     copy = strdup(s);
     str = strtok(copy, delim);
     while (str)

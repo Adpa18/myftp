@@ -5,7 +5,7 @@
 ** Login	wery_a
 **
 ** Started on	Tue Apr 19 21:45:38 2016 Adrien WERY
-** Last update	Wed May 04 14:30:32 2016 Adrien WERY
+** Last update	Thu May 12 12:24:22 2016 Adrien WERY
 */
 
 #ifndef COMMON_H
@@ -39,14 +39,12 @@ typedef enum MODE_DATA
 
 typedef struct
 {
-    SOCKET      server_sock;
     SOCKET      sock;
     SOCKET      sock_data;
     char        *root;
     STATE       status;
     int         addr;
     MODE_DATA   mode;
-    MODE_DATA   use_mode;
     char        username[255];
     char        ip_client[255];
     int         port_client;

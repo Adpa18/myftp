@@ -5,7 +5,7 @@
 ** Login	wery_a
 **
 ** Started on	Wed May 04 14:31:04 2016 Adrien WERY
-** Last update	Thu May 05 14:50:22 2016 Adrien WERY
+** Last update	Thu May 12 12:23:49 2016 Adrien WERY
 */
 
 #include <unistd.h>
@@ -13,7 +13,7 @@
 #include <time.h>
 #include <arpa/inet.h>
 #include <sys/wait.h>
-#include <common.h>
+#include "common.h"
 #include "array.h"
 #include "server.h"
 #include "cmdlist.h"
@@ -35,7 +35,6 @@ char    *ftp_pasv(const char *cmd_line, Client *client)
     if (client->sock_data != -1)
         close(client->sock_data);
     client->sock_data = init_connection(INADDR_ANY, 256 * p[0] + p[1]);
-    printf("PASV port = %d\n", 256 * p[0] + p[1]);
     client->mode = DATA_PASV;
     return (concat("227 Entering Passive Mode (", buff, ")"CRLF));
 }

@@ -23,10 +23,10 @@ typedef enum COMMAND
 
 static const char *cmdlist_str[] =
 {
-    "ABOR", "ACCT", "ALLO", "APPE", "CDUP", "CWD", "DELE",  "HELP", "LIST", "MKD",
-    "MODE", "NLST", "NOOP", "PASS", "PASV", "PORT", "PWD", "QUIT", "REIN", "REST",
-    "RETR", "RMD",  "RNFR", "RNTO", "SITE", "SIZE", "SMNT", "STAT", "STOR", "STOU",
-    "STRU",  "SYST", "TYPE", "USER"
+"ABOR", "ACCT", "ALLO", "APPE", "CDUP", "CWD", "DELE",  "HELP", "LIST", "MKD",
+"MODE", "NLST", "NOOP", "PASS", "PASV", "PORT", "PWD", "QUIT", "REIN", "REST",
+"RETR", "RMD",  "RNFR", "RNTO", "SITE", "SIZE", "SMNT", "STAT", "STOR", "STOU",
+"STRU",  "SYST", "TYPE", "USER"
 };
 
 typedef char    *(*cmdlist_ptr)(const char *, Client *);

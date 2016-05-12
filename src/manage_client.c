@@ -5,13 +5,12 @@
 ** Login	wery_a
 **
 ** Started on	Wed May 04 14:31:23 2016 Adrien WERY
-** Last update	Wed May 04 14:31:25 2016 Adrien WERY
+** Last update	Thu May 12 12:25:23 2016 Adrien WERY
 */
 
 #include <unistd.h>
 #include <stdlib.h>
-#include <server.h>
-#include <common.h>
+#include "common.h"
 #include "server.h"
 #include "cmd.h"
 
@@ -27,17 +26,20 @@ void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
         perror("accept");
         return;
     }
+    if (manager->size >= MAX_CLIENTS)
+    {
+        write_socket(csock, ERROR_MAX);
+        close(csock);
+        return;
+    }
     FD_SET(csock, rdfs);
     manager->max_fd = csock > manager->max_fd ? csock : manager->max_fd;
-    manager->clients[manager->size].server_sock = sock;
     manager->clients[manager->size].sock = csock;
+    manager->clients[manager->size].sock_data = -1;
     manager->clients[manager->size].status = NONE;
     manager->clients[manager->size].root = manager->cwd;
     manager->clients[manager->size].addr = (int)csin.sin_addr.s_addr;
-    manager->clients[manager->size].mode = DATA_NO;
-    manager->clients[manager->size].use_mode = DATA_NO;
-    manager->clients[manager->size].sock_data = -1;
-    ++manager->size;
+    manager->clients[manager->size++].mode = DATA_NO;
     write_socket(csock, WELCOME);
 }
 
@@ -107,7 +109,6 @@ void    listen_clients(fd_set *rdfs, Manager *manager)
                     remove_client(manager, i);
                 write_socket(manager->clients[i].sock, ret);
                 free(ret);
-                manager->clients[i].use_mode = DATA_NO;
             }
         }
         break;

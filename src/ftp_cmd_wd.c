@@ -5,7 +5,7 @@
 ** Login	wery_a
 **
 ** Started on	Wed May 04 14:31:14 2016 Adrien WERY
-** Last update	Wed May 04 14:31:16 2016 Adrien WERY
+** Last update	Thu May 12 12:24:43 2016 Adrien WERY
 */
 
 #include <unistd.h>
@@ -100,7 +100,6 @@ char    *ftp_list(const char *cmd_line, Client *client)
         ret = run_port(client, &cmd_list, cmd);
     free(cmd);
     free_array(array);
-    client->use_mode = client->mode;
     client->mode = DATA_NO;
     if (ret)
         return (ret);

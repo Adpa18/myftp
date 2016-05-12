@@ -40,6 +40,7 @@
 # define NOT_IMP_CMD    "502 Command not implemented"CRLF
 # define ERROR_CMD      "503 Bad sequence of commands"CRLF
 # define FAILED_DIR     "550 Failed to change directory"CRLF
+# define ERROR_MAX      "530 Sorry, the maximum number of connections"CRLF
 
 char    *ftp_no_cmd(const char *cmd_line, Client *client);
 char    *ftp_type(const char *cmd_line, Client *client);

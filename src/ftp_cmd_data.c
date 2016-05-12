@@ -5,11 +5,11 @@
 ** Login	wery_a
 **
 ** Started on	Wed May 04 14:30:55 2016 Adrien WERY
-** Last update	Wed May 04 16:09:35 2016 Adrien WERY
+** Last update	Thu May 12 12:24:33 2016 Adrien WERY
 */
 
 #include <stdlib.h>
-#include <common.h>
+#include "common.h"
 #include "socket.h"
 #include "array.h"
 #include "cmdlist.h"
@@ -35,7 +35,6 @@ char    *data_cmd(const char *cmd_line, Client *client, bool send)
     else
         ret = run_port(client, (send) ? &recv_file : &send_file, array[1]);
     free_array(array);
-    client->use_mode = client->mode;
     client->mode = DATA_NO;
     if (ret)
         return (ret);
