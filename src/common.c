@@ -13,35 +13,6 @@
 #include <stdlib.h>
 #include "common.h"
 
-inline char    *getLine(int fd)
-{
-    char    *dest;
-    char    *tmp;
-    char    buff[BUFF_SIZE + 1];
-    bool    done;
-
-    done = false;
-    dest = NULL;
-    while (!done)
-    {
-        memset(buff, 0, BUFF_SIZE + 1);
-        if (read(fd, buff, BUFF_SIZE) <= 0)
-            break;
-        for (size_t i = 0; i < BUFF_SIZE; i++)
-            if (buff[i] == '\n')
-            {
-                buff[i] = 0;
-                done = true;
-                break;
-            }
-        tmp = dest;
-        dest = concat(tmp, buff, NULL);
-        if (tmp)
-            free(tmp);
-    }
-    return (dest);
-}
-
 inline char *concat(const char *s1, const char *s2, const char *s3)
 {
     size_t  len1;

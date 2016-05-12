@@ -39,7 +39,7 @@ char    *read_socket(SOCKET sock)
             return (NULL);
         }
         if (n == 0)
-            return (NULL);
+            break;
         buffer[n] = 0;
         tmp = str;
         str = concat(str, buffer, 0);

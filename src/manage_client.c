@@ -10,6 +10,7 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include "array.h"
 #include "common.h"
 #include "server.h"
 #include "cmd.h"
@@ -91,6 +92,7 @@ char    *response(char *cmd_line, Client *client)
 
 void    listen_clients(fd_set *rdfs, Manager *manager)
 {
+    char    **array;
     char    *buffer;
     char    *ret;
 
@@ -105,15 +107,20 @@ void    listen_clients(fd_set *rdfs, Manager *manager)
         }
         else
         {
-            if ((ret = response(buffer, &(manager->clients[i]))))
+            array = split(buffer, "\r\n");
+            for (int j = 0; j < array_len((const char **)array); ++j)
             {
-                if (!strncmp(ret, "221", 3))
-                    remove_client(manager, i);
-                write_socket(manager->clients[i].sock, ret);
-                free(ret);
+                if ((ret = response(array[j], &(manager->clients[i]))))
+                {
+                    if (!strncmp(ret, "221", 3))
+                        remove_client(manager, i);
+                    write_socket(manager->clients[i].sock, ret);
+                    free(ret);
+                }
             }
         }
         free(buffer);
+        free_array(array);
         break;
     }
 }

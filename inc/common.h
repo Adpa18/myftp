@@ -55,7 +55,6 @@ char    *run_pasv(Client *client, cmd_func func, const char *cmd);
 char    *run_port(Client *client, cmd_func func, const char *cmd);
 char    *concat(const char *s1, const char *s2, const char *lim);
 char    *replace(char *s, char c, char by);
-char    *getLine(int fd);
 char    *exec(char *cmd_line);
 
 #endif /* !COMMON_H */
