@@ -42,6 +42,7 @@ typedef struct
     SOCKET      sock;
     SOCKET      sock_data;
     char        *root;
+    char        *cwd;
     STATE       status;
     int         addr;
     MODE_DATA   mode;

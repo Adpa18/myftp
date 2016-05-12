@@ -43,6 +43,16 @@ bool    init_select(fd_set *rdfs, int sock, Manager *manager)
     return (true);
 }
 
+void    clean_manager(Manager *manager)
+{
+    for (int i = 0; i < manager->size; i++)
+    {
+        free(manager->clients[i].cwd);
+        close(manager->clients[i].sock);
+    }
+    free(manager->cwd);
+}
+
 void    server(unsigned int port)
 {
     SOCKET  sock;
@@ -65,9 +75,7 @@ void    server(unsigned int port)
         else
             listen_clients(&rdfs, &manager);
     }
-    for (int i = 0; i < manager.size; i++)
-        close(manager.clients[i].sock);
-    free(manager.cwd);
+    clean_manager(&manager);
     close(sock);
 }
 

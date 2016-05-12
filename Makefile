@@ -29,6 +29,7 @@ LD_FLAGS        =   -lcrypt
 OBJ		        =   $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 $(OBJ_DIR)%.o	:	$(SRC_DIR)%.c
+	@mkdir -p $(OBJ_DIR)
 	@echo -e "Compiling $< to $@"
 	@$(CC) -c $(CFLAGS) $< -o $@
 
@@ -37,7 +38,7 @@ $(NAME)	:	$(OBJ)
 	@$(CC) $(OBJ) -o $(NAME) $(LD_FLAGS)
 	@echo -e "\033[33m${SERVER} Compiled\033[00m"
 
-all 	:	$(NAME)
+all 	: $(NAME)
 
 clean	:
 	@echo -e "\033[31mRemoving Objects\033[00m"

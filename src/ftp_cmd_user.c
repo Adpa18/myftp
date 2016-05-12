@@ -5,7 +5,7 @@
 ** Login	wery_a
 **
 ** Started on	Wed May 04 14:31:08 2016 Adrien WERY
-** Last update	Wed May 04 16:09:45 2016 Adrien WERY
+** Last update	Thu May 12 13:37:09 2016 Adrien WERY
 */
 
 #include <pwd.h>
@@ -21,8 +21,7 @@ char    *ftp_user(const char *cmd_line, Client *client)
         return (strdup(CANT_USER));
     if ((array = split(cmd_line, " ")) == NULL || !array[1])
     {
-        if (array)
-            free_array(array);
+        free_array(array);
         return (strdup(INVALID_USER));
     }
     client->status = USER_OK;

@@ -14,7 +14,7 @@
 #include "server.h"
 #include "cmd.h"
 
-void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
+bool    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
 {
     SOCKADDR_IN csin;
     socklen_t   sinsize;
@@ -23,14 +23,12 @@ void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
     sinsize = sizeof(csin);
     if ((csock = accept(sock, (SOCKADDR *)&csin, &sinsize)) == -1)
     {
-        perror("accept");
-        return;
+        return (perror("accept"), false);
     }
     if (manager->size >= MAX_CLIENTS)
     {
         write_socket(csock, ERROR_MAX);
-        close(csock);
-        return;
+        return (close(csock), false);
     }
     FD_SET(csock, rdfs);
     manager->max_fd = csock > manager->max_fd ? csock : manager->max_fd;
@@ -38,13 +36,16 @@ void    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
     manager->clients[manager->size].sock_data = -1;
     manager->clients[manager->size].status = NONE;
     manager->clients[manager->size].root = manager->cwd;
+    manager->clients[manager->size].cwd = strdup(manager->cwd);
     manager->clients[manager->size].addr = (int)csin.sin_addr.s_addr;
     manager->clients[manager->size++].mode = DATA_NO;
     write_socket(csock, WELCOME);
+    return (true);
 }
 
 void    remove_client(Manager *manager, int to_remove)
 {
+    free(manager->clients[to_remove].cwd);
     close(manager->clients[to_remove].sock);
     memmove(manager->clients + to_remove, manager->clients + to_remove + 1,
             (manager->size - to_remove - 1) * sizeof(Client));
@@ -80,6 +81,7 @@ char    *response(char *cmd_line, Client *client)
     if ((cmd = get_cmd(cmd_line))  == NO_CMD)
         return (strdup(UNKNOW_CMD));
     printf("Client %d ==> %s\n", client->sock, cmd_line);
+    chdir(client->cwd);
     if (client->status == LOGGED_IN || cmd == USER
         || cmd == PASS || cmd == QUIT)
         return (cmdlist_func[cmd](cmd_line, client));

@@ -5,7 +5,7 @@
 ** Login	wery_a
 **
 ** Started on	Wed May 04 14:30:55 2016 Adrien WERY
-** Last update	Thu May 12 12:24:33 2016 Adrien WERY
+** Last update	Thu May 12 13:36:39 2016 Adrien WERY
 */
 
 #include <stdlib.h>
@@ -23,8 +23,7 @@ char    *data_cmd(const char *cmd_line, Client *client, bool send)
         return (strdup(PASV_PORT));
     if (!(array = split(cmd_line, " ")) || !array[1])
     {
-        if (array)
-            free_array(array);
+        free_array(array);
         return (strdup(ERROR_CMD));
     }
     ret = concat(DATA_PENDING, array[1], CRLF);

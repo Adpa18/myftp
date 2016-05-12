@@ -5,7 +5,7 @@
 ** Login	wery_a
 **
 ** Started on	Wed May 04 14:31:00 2016 Adrien WERY
-** Last update	Wed May 04 14:31:02 2016 Adrien WERY
+** Last update	Thu May 12 13:36:50 2016 Adrien WERY
 */
 
 #include <unistd.h>
@@ -22,8 +22,7 @@ char    *ftp_dele(const char *cmd_line, Client *client)
     (void)client;
     if (!(array = split(cmd_line, " ")) || !array[1])
     {
-        if (array)
-            free_array(array);
+        free_array(array);
         return (strdup(ERROR_CMD));
     }
     if (stat(array[1], &st) == -1)
