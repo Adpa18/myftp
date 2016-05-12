@@ -1,4 +1,6 @@
 *.o
+.clang_complete
+.idea
 .idea/*
 CMakeLists.txt
 test/*
