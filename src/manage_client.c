@@ -15,44 +15,6 @@
 #include "server.h"
 #include "cmd.h"
 
-bool    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
-{
-    SOCKADDR_IN csin;
-    socklen_t   sinsize;
-    int         csock;
-
-    sinsize = sizeof(csin);
-    if ((csock = accept(sock, (SOCKADDR *)&csin, &sinsize)) == -1)
-    {
-        return (perror("accept"), false);
-    }
-    if (manager->size >= MAX_CLIENTS)
-    {
-        write_socket(csock, ERROR_MAX);
-        return (close(csock), false);
-    }
-    FD_SET(csock, rdfs);
-    manager->max_fd = csock > manager->max_fd ? csock : manager->max_fd;
-    manager->clients[manager->size].sock = csock;
-    manager->clients[manager->size].sock_data = -1;
-    manager->clients[manager->size].status = NONE;
-    manager->clients[manager->size].root = manager->cwd;
-    manager->clients[manager->size].cwd = strdup(manager->cwd);
-    manager->clients[manager->size].addr = (int)csin.sin_addr.s_addr;
-    manager->clients[manager->size++].mode = DATA_NO;
-    write_socket(csock, WELCOME);
-    return (true);
-}
-
-void    remove_client(Manager *manager, int to_remove)
-{
-    free(manager->clients[to_remove].cwd);
-    close(manager->clients[to_remove].sock);
-    memmove(manager->clients + to_remove, manager->clients + to_remove + 1,
-            (manager->size - to_remove - 1) * sizeof(Client));
-    --manager->size;
-}
-
 COMMAND get_cmd(const char *cmd_line)
 {
     for (unsigned  int i = 0; i < sizeof(cmdlist_str) / sizeof(char *); ++i)
@@ -90,11 +52,31 @@ char    *response(char *cmd_line, Client *client)
         return (strdup(LOGIN_FIRST));
 }
 
-void    listen_clients(fd_set *rdfs, Manager *manager)
+void    aws(Manager *manager, int i, char *buffer)
 {
     char    **array;
-    char    *buffer;
     char    *ret;
+
+    array = split(buffer, "\r\n");
+    for (int j = 0; j < array_len((const char **)array); ++j)
+    {
+        if ((ret = response(array[j], &(manager->clients[i]))))
+        {
+            write_socket(manager->clients[i].sock, ret);
+            free(ret);
+            if (!strncmp(ret, "221", 3))
+            {
+                remove_client(manager, i);
+                break;
+            }
+        }
+    }
+    free_array(array);
+}
+
+void    listen_clients(fd_set *rdfs, Manager *manager)
+{
+    char    *buffer;
 
     for (int i = 0; i < manager->size; i++)
     {
@@ -107,20 +89,9 @@ void    listen_clients(fd_set *rdfs, Manager *manager)
         }
         else
         {
-            array = split(buffer, "\r\n");
-            for (int j = 0; j < array_len((const char **)array); ++j)
-            {
-                if ((ret = response(array[j], &(manager->clients[i]))))
-                {
-                    if (!strncmp(ret, "221", 3))
-                        remove_client(manager, i);
-                    write_socket(manager->clients[i].sock, ret);
-                    free(ret);
-                }
-            }
+            aws(manager, i, buffer);
         }
         free(buffer);
-        free_array(array);
         break;
     }
 }
