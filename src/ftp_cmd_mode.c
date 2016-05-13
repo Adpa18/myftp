@@ -13,7 +13,6 @@
 #include <time.h>
 #include <arpa/inet.h>
 #include <sys/wait.h>
-#include <common.h>
 #include "common.h"
 #include "array.h"
 #include "server.h"
