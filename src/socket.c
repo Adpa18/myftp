@@ -42,7 +42,7 @@ char    *read_socket(SOCKET sock)
             break;
         buffer[n] = 0;
         tmp = str;
-        str = concat(str, buffer, 0);
+        str = concat(str, buffer, "\r\n\0");
         free(tmp);
         if (buffer[n - 1] == '\n' && buffer[n - 2] == '\r')
             break;

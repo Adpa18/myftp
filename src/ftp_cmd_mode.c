@@ -13,6 +13,7 @@
 #include <time.h>
 #include <arpa/inet.h>
 #include <sys/wait.h>
+#include <common.h>
 #include "common.h"
 #include "array.h"
 #include "server.h"
@@ -49,7 +50,9 @@ char    *ftp_port(const char *cmd_line, Client *cl)
     if ((d_ip = split(array[1], ",")) == NULL || !d_ip[0] || !d_ip[1]
         || !d_ip[2] || !d_ip[3] || !d_ip[4] || !d_ip[5])
         return (free_array(d_ip), strdup(ERROR_CMD));
-    sprintf(cl->ip_client, "%s.%s.%s.%s", d_ip[0], d_ip[1], d_ip[2], d_ip[3]);
+    sprintf(cl->ip_client, "%s.%s.%s.%s",
+            (d_ip[0][0] == '(') ? &d_ip[0][1] : d_ip[0], d_ip[1],
+            d_ip[2], replace(d_ip[3], ')', 0));
     cl->port_client = 256 * atoi(d_ip[4]) + atoi(d_ip[5]);
     if (cl->sock_data != -1)
         close(cl->sock_data);

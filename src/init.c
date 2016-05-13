@@ -50,7 +50,6 @@ SOCKET      init_connection(in_addr_t ip, unsigned int port)
     return (init_listen(sock));
 }
 
-
 bool    new_client(SOCKET sock, fd_set *rdfs, Manager *manager)
 {
     SOCKADDR_IN csin;
