@@ -22,7 +22,7 @@ SRC		=	$(SRC_DIR)cmd.c		         \
             $(SRC_DIR)ftp_cmd_file.c     \
             $(SRC_DIR)ftp_cmd_data.c     \
 
-CFLAGS			=   -I./inc -W -Wall -Wextra -Werror
+CFLAGS			=   -I./inc -W -Wall -Wextra -Werror -D_GNU_SOURCE -std=c99
 
 LD_FLAGS        =   -lcrypt
 
