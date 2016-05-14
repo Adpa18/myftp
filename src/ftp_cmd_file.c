@@ -74,13 +74,3 @@ char    *ftp_rmd(const char *cmd_line, Client *client)
     }
     return (ret);
 }
-
-//char    *ftp_rnfr(const char *cmd_line, Client *client)
-//{
-//
-//}
-//
-//char    *ftp_rnto(const char *cmd_line, Client *client)
-//{
-//
-//}

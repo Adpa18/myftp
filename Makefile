@@ -36,7 +36,7 @@ $(OBJ_DIR)%.o	:	$(SRC_DIR)%.c
 $(NAME)	:	$(OBJ)
 	@echo -e "\033[32mLinking $@\033[00m"
 	@$(CC) $(OBJ) -o $(NAME) $(LD_FLAGS)
-	@echo -e "\033[33m${SERVER} Compiled\033[00m"
+	@echo -e "\033[33m${NAME} Compiled\033[00m"
 
 all 	: $(NAME)
 

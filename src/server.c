@@ -68,9 +68,7 @@ void    server(unsigned int port)
     {
         if (!init_select(&rdfs, sock, &manager))
             break;
-        if (FD_ISSET(STDIN_FILENO, &rdfs))
-            break;
-        else if (FD_ISSET(sock, &rdfs))
+        if (FD_ISSET(sock, &rdfs))
             new_client(sock, &rdfs, &manager);
         else
             listen_clients(&rdfs, &manager);
