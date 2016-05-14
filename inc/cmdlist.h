@@ -38,7 +38,7 @@
 # define CURRENT_DIR    "257 Current Working Directory is "
 # define UNKNOW_CMD     "500 Unknown command"CRLF
 # define NOT_IMP_CMD    "502 Command not implemented"CRLF
-# define ERROR_CMD      "503 Bad sequence of commands"CRLF
+# define ERROR_CMD      "501 Bad sequence of commands"CRLF
 # define FAILED_DIR     "550 Failed to change directory"CRLF
 # define ERROR_MAX      "530 Sorry, the maximum number of connections"CRLF
 
